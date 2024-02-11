@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  selenium:
+    image: 'selenium/standalone-chrome:119.0.6045.199-chromedriver-119.0.6045.105'
+    ports:
+      - 4444:4444
+      - 7900:7900
+    networks:
+      - earthquake-render
+
+  flask-app:
+    build: .
+    user: 1000:1000
+    depends_on:
+      - 'selenium'
+    ports:
+      - 5000:5000
+    volumes:
+      - './img:/app/img'
+    environment:
+      - FLASK_DEBUG=1
+    networks:
+      - earthquake-render
+
+networks:
+  earthquake-render:
+    driver: bridge
